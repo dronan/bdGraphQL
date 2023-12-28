@@ -1,18 +1,18 @@
 const db = require('../../config/db')
 
 module.exports = {
-    usuarios() {
-        return db('usuarios')
+    users() {
+        return db('users')
     },
-    usuario(_, { filtro }) {
-        if (!filtro) return null
-        const { id, email } = filtro
+    user(_, { filter }) {
+        if (!filter) return null
+        const { id, email } = filter
         if(id) {
-            return db('usuarios')
+            return db('users')
                 .where({ id })
                 .first()
         } else if (email) {
-            return db('usuarios')
+            return db('users')
                 .where({ email })
                 .first()
         } else {

@@ -9,7 +9,7 @@
 npm install
 ```
 
-- Create a database called `exercises-cap-4` in postgres
+- Create a database called `project` in postgres, and, after it, run the command below to create the tables:
 
 ```
 npx knex migrate:latest
@@ -25,86 +25,77 @@ npm start
 
 ```
 
-Usuarios:
+Users:
+
 {
-  usuarios {
+  users {
     id
-    nome
+    name
     email
-    perfis {
-      nome
+    profiles {
+      name
     }
   }
-  usuario(filtro: { email: "jlann@empresa.com.br" }) {
+  user(filter: { email: "jlann@empresa.com.br" }) {
     id
-    nome
+    name
     email
-    perfis {
-      nome
+    profiles {
+      name
     }
   }
 }
 
 mutation {
-  novoUsuario(
-    dados: {
-      nome: "novo Usuario"
-      email: "testes@usuario.com"
-      senha: "123456"
-      perfis: [{ nome: "Master" }, { nome: "Admin" }]
+  newUser(
+    data: {
+      name: "New User"
+      email: "new3@user.com"
+      password: "123456"
+      profiles: [{ name: "master" }]
     }
   ) {
     id
-    nome
+    name
     email
+    profiles {
+    	name
+    }
   }
 }
 
 mutation {
-  alterarUsuario(
-    filtro: { email: "testes@usuario.com" }
-    dados: {
-      nome: "teste"
-      senha: "123"
-      perfis: [{ nome: "Admin" }, { nome: "Master" }]
+  updateUser(
+    filter: { email: "new3@user.com" }
+    data: {
+      name: "test"
+      password: "123"
+      profiles: [{ name: "admin" }, { name: "master" }]
     }
   ) {
-    nome
-    senha
-    perfis {
-      nome
+    name
+    password
+    profiles {
+      name
     }
   }
 }
 
 mutation {
-  excluirUsuario(filtro: { email: "teste@usuario.com" }) {
-    nome
-  }
-}
-
-mutation {
-  alterarUsuario(
-    filtro: { email: "teste@usuario.com" }
-    dados: {
-      nome: "teste alterado"
-      senha: "123456"
-      perfis: [{ nome: "Admin" }]
-    }
-  ) {
-    nome
+  deleteUser(filter: { email: "new3@user.com" }) {
+    name
   }
 }
 
 {
-  usuario(filtro: { id: 19 }) {
+  user(filter: { id: 1 }) {
     id
-    nome
+    name
     email
-    senha
-    perfis {
-      nome
-      usuarios {
+    password
+    profiles {
+      name
+      users {
         email
       }
     }
@@ -112,55 +103,56 @@ mutation {
 }
 
 
-Perfil:
+
+Profiles:
 
 {
-  perfis {
+  profiles {
     id
-    nome
-    rotulo
+    name
+    label
   }
-  perfil(
-    filtro: {
-      # nome: "admin"
+  profile(
+    filter: {
+      # name: "admin"
       id: 1
     }
   ) {
     id
-    nome
-    rotulo
+    name
+    label
   }
 }
 
+
 mutation {
-  novoPerfil(dados: { nome: "novo Usuario", rotulo: "user" }) {
+  newProfile(data: { name: "New Profile", label: "new" }) {
     id
-    nome
-    rotulo
+    name
+    label
   }
 }
 
+
 mutation {
-  alterarPerfil(
-    filtro: {
-      # id:2
-      nome: "alterado"
+  updateProfile(
+    filter: {
+      id:3
     }
-    dados: {
-      # nome: "alterado"
-      rotulo: "test change"
+    data: {
+      label: "test change"
     }
   ) {
     id
-    nome
-    rotulo
+    name
+    label
   }
 }
 
 mutation {
-  excluirPerfil(filtro: { id: 3 }) {
+  deleteProfile(filter: { id: 3 }) {
     id
-    nome
-    rotulo
+    name
+    label
   }
 }

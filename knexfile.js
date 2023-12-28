@@ -1,12 +1,14 @@
+require('dotenv').config();
 // Update with your config settings.
 
 module.exports = {
   client: 'postgresql',
     connection: {
-      database: 'exercises-cap-4',
-      user:     'postgres',
-      password: 'postgrespw',
-      port: 55000,
+      host: process.env.APP_DB_HOST,
+      database: process.env.APP_DB_NAME,
+      user:     process.env.APP_DB_USER,
+      password: process.env.APP_DB_PASSWORD,
+      port: process.env.APP_DB_PORT,
     },
   pool: {
     min: 2,
