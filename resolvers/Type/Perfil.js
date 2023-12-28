@@ -6,7 +6,7 @@ module.exports = {
             .join(
                 'usuarios_perfis',
                 'usuarios.id',
-                'usuarios_perfis.usuarios_id'
+                'usuarios_perfis.usuario_id'
             )
             .where({ perfil_id: perfil.id })
     }
