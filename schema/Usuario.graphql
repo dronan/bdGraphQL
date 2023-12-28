@@ -2,6 +2,7 @@ type Usuario {
     id: Int
     nome: String!
     email: String!
+    senha: String
     perfis: [Perfil]
 }
 

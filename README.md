@@ -43,15 +43,49 @@ Usuarios:
   	}
 }
 
+
 mutation {
   novoUsuario(dados: {
     nome: "novo Usuario"
-    email:"teste@usuario.com"
+    email:"testes@usuario.com"
     senha: "123456"
+    perfis: [
+      {nome: "Master"}
+      {nome: "Admin"}
+    ]
     }) {
     id nome email
     }
 }
+
+
+mutation {
+  excluirUsuario (
+    filtro: { 
+      email: "teste@usuario.com"
+    }
+  ) {
+    nome
+  }
+}
+
+mutation {
+  alterarUsuario (
+    filtro: { 
+      email: "teste@usuario.com"
+    }
+    dados: {
+      nome: "teste alterado"
+      senha:  "123456"
+      perfis: [
+        {nome: "Admin"}
+      ]
+    }
+    ) {
+    nome
+    }
+}
+
 
 
 
