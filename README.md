@@ -23,10 +23,13 @@ npm start
 
 ## Executing
 
-```
+Execute on playground: **http://localhost:4000/graphql**
 
-Users:
+## Users:
 
+- List all users and filter by email
+
+```graphql
 {
   users {
     id
@@ -45,7 +48,11 @@ Users:
     }
   }
 }
+```
 
+- Create an user
+
+```graphql
 mutation {
   newUser(
     data: {
@@ -63,7 +70,11 @@ mutation {
     }
   }
 }
+```
 
+- Update an user
+
+```graphql
 mutation {
   updateUser(
     filter: { email: "new3@user.com" }
@@ -80,13 +91,22 @@ mutation {
     }
   }
 }
+```
 
+- Delete an user
+
+```graphql
 mutation {
   deleteUser(filter: { email: "new3@user.com" }) {
     name
   }
 }
 
+```
+
+- Find an user by id
+
+```graphql
 {
   user(filter: { id: 1 }) {
     id
@@ -101,11 +121,53 @@ mutation {
     }
   }
 }
+```
+
+- Register an user using bcrypt password
+
+```graphql
+mutation {
+  registerUser(
+    data: { name: "John K", email: "john.k@gmail.com", password: "123" }
+  ) {
+    id
+    name
+    email
+    password
+    profiles {
+      name
+    }
+  }
+}
+```
+
+- Return an user with a jwt token
+
+```graphql
+{
+  login(data: {
+    email:"john.k@gmail.com"
+    password:"123"
+  }) {
+    id
+    name
+    email
+    name
+    profiles {
+      name
+    }
+    token
+  }
+}
+```
 
 
+## Profiles:
 
-Profiles:
 
+- List all profiles and filter by name
+
+```graphql
 {
   profiles {
     id
@@ -123,8 +185,11 @@ Profiles:
     label
   }
 }
+```
 
+- Create a profile
 
+```graphql
 mutation {
   newProfile(data: { name: "New Profile", label: "new" }) {
     id
@@ -132,8 +197,11 @@ mutation {
     label
   }
 }
+```
 
+- Update a profile
 
+```graphql
 mutation {
   updateProfile(
     filter: {
@@ -148,7 +216,11 @@ mutation {
     label
   }
 }
+```
 
+- Delete a profile
+
+```graphql
 mutation {
   deleteProfile(filter: { id: 3 }) {
     id
@@ -156,3 +228,4 @@ mutation {
     label
   }
 }
+```

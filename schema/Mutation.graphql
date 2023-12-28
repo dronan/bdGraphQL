@@ -1,5 +1,9 @@
 type Mutation {
     # Users mutations
+    registerUser(
+        data: UserRegisterInput!
+    ): User!
+
     newUser(
         data: UserInput!
     ): User!

@@ -9,6 +9,7 @@ exports.up = function(knex, Promise) {
       return knex('profiles').insert([
           { name: 'admin', label: 'Administrator' },
           { name: 'master', label: 'Master' },
+          { name: 'common', label: 'Common' },
       ])
   })
 };

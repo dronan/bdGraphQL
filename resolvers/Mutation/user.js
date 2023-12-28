@@ -1,21 +1,30 @@
+const bcrypt = require('bcrypt')
 const db = require('../../config/db')
 const { profile: getProfile } = require('../Query/profile')
 const { user: getUser } = require('../Query/user')
 
-module.exports = {
+const mutations = {
     async newUser(_, { data }) {
         try {
             const idProfiles = []
 
-            // search the profile ids
-            if(data.profiles) {
-                for(let filter of data.profiles) {
-                    const perfil = await getProfile(_, {
-                        filter
-                    })
-                    if(perfil) idProfiles.push(perfil.id)
-                }
+            if (!data.profiles || !data.profiles.length) {
+                data.profiles = [{
+                    name: 'common'
+                }]
             }
+
+            // search the profile ids
+            for(let filter of data.profiles) {
+                const perfil = await getProfile(_, {
+                    filter
+                })
+                if(perfil) idProfiles.push(perfil.id)
+            }
+
+            // encrypt the password
+            const salt = bcrypt.genSaltSync()
+            data.password = bcrypt.hashSync(data.password, salt)
 
             // delete the profile ids from the data to insert into users table
             delete data.profiles
@@ -87,6 +96,12 @@ module.exports = {
                     }
                 }
 
+                if (data.password) {
+                    // encrypt the password
+                    const salt = bcrypt.genSaltSync()
+                    data.password = bcrypt.hashSync(data.password, salt)
+                }
+
                 // delete the profiles from the data to update the user
                 delete data.profiles
 
@@ -99,5 +114,16 @@ module.exports = {
         catch(e) {
             throw new Error(e)
         }
+    },
+    registerUser(_, { data }) {
+        return mutations.newUser(_, {
+            data: {
+                name: data.name,
+                email: data.email,
+                password: data.password
+            }
+        })
     }
-}
+};
+
+module.exports = mutations
