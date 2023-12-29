@@ -76,6 +76,7 @@ export default {
                 }
             }).then((resp) => {
                 this.data = resp.data.deleteProfile
+                this.filter = {}
                 this.errors = null
             }).catch((error) => {
                 this.data = null

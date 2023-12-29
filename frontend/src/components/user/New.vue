@@ -112,6 +112,7 @@ export default {
                 }
             }).then(result => {
                 this.data = result.data.newUser
+                this.user = {}
                 this.errors = null
             }).catch(e => {
                 this.errors = e

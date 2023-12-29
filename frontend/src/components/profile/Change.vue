@@ -91,6 +91,8 @@ export default {
                 }
             }).then(result => {
                 this.data = result.data.updateProfile
+                this.filter = {}
+                this.profile = {}
                 this.errors = null
             }).catch(e => {
                 this.errors = e

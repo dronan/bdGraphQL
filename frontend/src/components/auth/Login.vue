@@ -88,6 +88,7 @@ export default {
                 this.data = data.login
                 this.errors = null
                 this.setUser(this.data)
+                this.user = {}
             }).catch(err => {
                 this.data = null
                 this.errors = err.graphQLErrors.map(e => e.message)

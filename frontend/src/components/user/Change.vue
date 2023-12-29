@@ -128,6 +128,8 @@ export default {
                 }
             }).then(result => {
                 this.data = result.data.updateUser
+                this.filter = {}
+                this.user = {}
                 this.errors = null
             }).catch(e => {
                 this.errors = e

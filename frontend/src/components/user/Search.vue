@@ -88,6 +88,7 @@ export default {
                 }
             }).then((result) => {
                 this.data = result.data.user
+                this.filter = {}
                 this.errors = null
             }).catch(e => {
                 this.errors = e
