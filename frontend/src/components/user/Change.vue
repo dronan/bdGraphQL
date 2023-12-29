@@ -119,8 +119,8 @@ export default {
                     }
                 `,
                 variables: {
-                    idFilter: this.filter.id,
-                    emailFilter: this.filter.email,
+                    idFilter: this.filter.id || null,
+                    emailFilter: this.filter.email || null,
                     name: this.user.name,
                     email: this.user.email,
                     password: this.user.password,

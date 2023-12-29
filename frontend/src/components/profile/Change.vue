@@ -46,6 +46,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -59,7 +60,41 @@ export default {
     },
     methods: {
         changeProfile() {
-            // implement
+            this.$api.mutate({
+                mutation: gql`
+                    mutation(
+                        $idFilter: Int
+                        $nameFilter: String
+                        $name: String!
+                        $label: String!
+                    ) {
+                        updateProfile(
+                            filter: {
+                                id: $idFilter
+                                name: $nameFilter
+                            }
+                            data: {
+                                name: $name
+                                label: $label
+                            }) {
+                            id
+                            name
+                            label
+                        }
+                    }
+                `,
+                variables: {
+                    idFilter: this.filter.id || null,
+                    nameFilter: this.filter.name || null,
+                    name: this.profile.name,
+                    label: this.profile.label,
+                }
+            }).then(result => {
+                this.data = result.data.updateProfile
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+            })
         }
     }
 }
