@@ -8,10 +8,11 @@
                         <div v-if="errors">
                             <Error :errors="errors" />
                         </div>
-                        <v-text-field label="ID"
+                        <v-text-field label="ID" type="number"
                             v-model.number="filter.id" />
                         <v-text-field label="E-mail"
-                            v-model="filter.email" />
+                            v-model="filter.email"
+                            :rules="emailRules" />
                         <v-btn color="primary" class="ml-0 mt-3"
                             @click="search">
                             Search
@@ -49,7 +50,10 @@ export default {
             filter: {},
             profile: [],
             data: null,
-            errors: null
+            errors: null,
+            emailRules: [
+                v => !v || /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
         }
     },
     computed: {

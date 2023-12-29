@@ -3,20 +3,23 @@
         <v-layout>
             <v-flex>
                 <v-layout column class="ma-3">
-                    <h1 class="headline">Delete User</h1>
-                    <v-divider class="mb-3" />
-                    <div v-if="errors">
-                        <Error :errors="errors" />
-                    </div>
-                    <v-text-field label="ID"
-                        v-model.number="filter.id" />
-                    <v-text-field label="E-mail"
-                        v-model="filter.email" />
+                    <v-form ref="form">
+                        <h1 class="headline">Delete User</h1>
+                        <v-divider class="mb-3" />
+                        <div v-if="errors">
+                            <Error :errors="errors" />
+                        </div>
+                        <v-text-field label="ID" type="number"
+                            v-model.number="filter.id" />
+                        <v-text-field label="E-mail"
+                            v-model="filter.email" 
+                            :rules="emailRules" />
 
-                    <v-btn color="error" class="ml-0 mt-3"
-                        @click="deleteUser">
-                        Delete User
-                    </v-btn>
+                        <v-btn color="error" class="ml-0 mt-3"
+                            @click="deleteUser">
+                            Delete User
+                        </v-btn>
+                    </v-form>
                 </v-layout>
             </v-flex>
             <v-flex>
@@ -47,11 +50,18 @@ export default {
         return {
             filter: {},
             data: null,
-            errors: null
+            errors: null,
+            emailRules: [
+                v => !v || /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
         }
     },
     methods: {
         deleteUser() {
+            if (!this.$refs.form.validate()) {
+                this.errors = ["Invalid data"]
+                return
+            }
             this.$api.mutate({
                 mutation: gql`
                     mutation(

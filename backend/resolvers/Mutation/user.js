@@ -36,7 +36,7 @@ const mutations = {
             const user = await db('users')
                 .where({ email }).first()
             if(user) {
-                throw new Error('E-mail já cadastrado')
+                throw new Error('E-mail already registered')
             }
 
             // insert the user data into users table

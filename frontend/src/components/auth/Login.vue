@@ -3,19 +3,21 @@
         <v-layout>
             <v-flex>
                 <v-layout column class="ma-3">
-                    <h1 class="headline">Login</h1>
-                    <v-divider class="mb-3" />
-                        <div v-if="errors">
-                            <Error :errors="errors" />
-                        </div>
-                        <v-text-field label="E-mail"
-                            v-model="user.email" />
-                        <v-text-field label="Password"
-                            v-model="user.password" type="password" />
-                        <v-btn color="primary" class="ml-0 mt-3"
-                            @click="login">
-                            Login
-                        </v-btn>
+                    <v-form ref="form">
+                        <h1 class="headline">Login</h1>
+                        <v-divider class="mb-3" />
+                            <div v-if="errors">
+                                <Error :errors="errors" />
+                            </div>
+                            <v-text-field label="E-mail"
+                                v-model="user.email" :rules="emailRules" />
+                            <v-text-field label="Password"
+                                v-model="user.password" type="password" />
+                            <v-btn color="primary" class="ml-0 mt-3"
+                                @click="login">
+                                Login
+                            </v-btn>
+                    </v-form>
                 </v-layout>
             </v-flex>
             <v-flex>
@@ -48,7 +50,10 @@ export default {
         return {
             user: {},
             data: null,
-            errors: null
+            errors: null,
+            emailRules: [
+                v => !v || /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
         }
     },
     computed: {
@@ -60,6 +65,10 @@ export default {
     methods: {
         ...mapActions(['setUser']),
         login() {
+            if (!this.$refs.form.validate()) {
+                this.errors = ["Invalid data"]
+                return
+            }
             this.$api.query({
                 query: gql`
                     query($email: String!, $password: String!){

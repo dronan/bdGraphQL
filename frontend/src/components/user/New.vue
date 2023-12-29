@@ -3,32 +3,35 @@
         <v-layout>
             <v-flex>
                 <v-layout column class="ma-3">
-                    <h1 class="headline">New User</h1>
-                    <v-divider class="mb-3" />
-                        <div v-if="errors">
-                            <Error :errors="errors" />
-                        </div>
-                        <v-text-field label="Name"
-                            v-model="user.name" />
-                        <v-text-field label="E-mail"
-                            v-model="user.email" />
-                        <v-text-field label="Password"
-                            v-model="user.password" type="password" />
-                        <v-select label="Profile"
-                            v-model="user.profiles"
-                            :items="profiles"
-                            item-value="id"
-                            item-text="label"
-                            attach multiple
-                            chips deletable-chips />
-                        <v-btn class="ml-0 mt-3"
-                            @click="getProfiles">
-                            Get Profile
-                        </v-btn>
-                        <v-btn color="primary" class="ml-0 mt-3"
-                            @click="newUser">
-                            New User
-                        </v-btn>
+                    <v-form ref="form">
+                        <h1 class="headline">New User</h1>
+                        <v-divider class="mb-3" />
+                            <div v-if="errors">
+                                <Error :errors="errors" />
+                            </div>
+                            <v-text-field label="Name"
+                                v-model="user.name" />
+                            <v-text-field label="E-mail"
+                                v-model="user.email"
+                                :rules="emailRules" />
+                            <v-text-field label="Password"
+                                v-model="user.password" type="password" />
+                            <v-select label="Profile"
+                                v-model="user.profiles"
+                                :items="profiles"
+                                item-value="id"
+                                item-text="label"
+                                attach multiple
+                                chips deletable-chips />
+                            <v-btn class="ml-0 mt-3"
+                                @click="getProfiles">
+                                Get Profile
+                            </v-btn>
+                            <v-btn color="primary" class="ml-0 mt-3"
+                                @click="newUser">
+                                New User
+                            </v-btn>
+                    </v-form>
                 </v-layout>
             </v-flex>
             <v-flex>
@@ -62,7 +65,10 @@ export default {
             user: {},
             profiles: [],
             data: null,
-            errors: null
+            errors: null,
+            emailRules: [
+                v => !v || /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
         }
     },
     computed: {
@@ -80,6 +86,10 @@ export default {
     },
     methods: {
         newUser() {
+            if (!this.$refs.form.validate()) {
+                this.errors = ["Invalid data"]
+                return
+            }
             this.$api.mutate({
                 mutation: gql`
                     mutation(

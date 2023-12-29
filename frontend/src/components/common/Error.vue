@@ -19,7 +19,14 @@ export default {
             if(e.graphQLErrors) {
                 itens.push(...e.graphQLErrors)
             } else {
-                itens.push(...e)
+                e.forEach(item => {
+                    if (typeof item === 'string') {
+                        itens.push({ message: item });
+                    } else if (item instanceof Object) {
+                        console.log(item);
+                        itens.push(item);
+                    }
+                });
             }
 
             if(itens.length === 0) {

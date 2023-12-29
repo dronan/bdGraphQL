@@ -8,7 +8,7 @@
                     <div v-if="errors">
                         <Error :errors="errors" />
                     </div>
-                    <v-text-field label="ID"
+                    <v-text-field label="ID" type="number" 
                         v-model.number="filter.id" />
                     <v-text-field label="Name"
                         v-model="filter.name" />

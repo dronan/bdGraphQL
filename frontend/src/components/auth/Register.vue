@@ -11,7 +11,8 @@
                         <v-text-field label="Name"
                             v-model="user.name" />
                         <v-text-field label="E-mail"
-                            v-model="user.email" />
+                            v-model="user.email"
+                            :rules="emailRules" />
                         <v-text-field label="Password"
                             v-model="user.password" type="password" />
                         <v-btn color="primary" class="ml-0 mt-3"
@@ -50,7 +51,10 @@ export default {
         return {
             user: {},
             data: null,
-            errors: null
+            errors: null,
+            emailRules: [
+                v => !v || /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
         }
     },
     computed: {
@@ -61,6 +65,10 @@ export default {
     },
     methods: {
         register() {
+            if (!this.$refs.form.validate()) {
+                this.errors = ["Invalid data"]
+                return
+            }
             this.$api.mutate({
                 mutation: gql`
                     mutation(
