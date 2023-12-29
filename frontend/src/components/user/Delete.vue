@@ -39,6 +39,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -51,7 +52,35 @@ export default {
     },
     methods: {
         deleteUser() {
-            // implement
+            this.$api.mutate({
+                mutation: gql`
+                    mutation(
+                        $id: Int
+                        $email: String
+                    ) {
+                        deleteUser(
+                            filter: {
+                                id: $id
+                                email: $email
+                            }
+                        ) {
+                            id
+                            name
+                            email
+                        }
+                    }
+                `,
+                variables: {
+                    id: this.filter.id || null,
+                    email: this.filter.email || null
+                }
+            }).then((resp) => {
+                this.data = resp.data.deleteUser
+                this.errors = null
+            }).catch((error) => {
+                this.data = null
+                this.errors = error.graphQLErrors
+            })
         }
     }
 }
