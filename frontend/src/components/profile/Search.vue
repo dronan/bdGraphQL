@@ -9,9 +9,9 @@
                             <Error :errors="errors" />
                         </div>
                         <v-text-field label="ID"
-                            v-model.number="profile.id" />
+                            v-model.number="filter.id" />
                         <v-text-field label="Name"
-                            v-model="profile.name" />
+                            v-model="filter.name" />
                         <v-btn color="primary" class="ml-0 mt-3"
                             @click="search">
                             Search
@@ -38,13 +38,13 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
     data() {
         return {
-            profile: {},
-            profiles: [],
+            filter: {},
             data: null,
             errors: null
         }
@@ -57,7 +57,35 @@ export default {
     },
     methods: {
         search() {
-            // implement
+            this.$api.query({
+                query: gql`
+                    query(
+                        $id: Int, 
+                        $name: String) {
+                        profile( 
+                            filter: {
+                                    id: $id, 
+                                    name: $name 
+                                    }
+                            ){
+                                id
+                                name
+                                label
+                            }
+                    }
+                `,
+                fetchPolicy: 'network-only',
+                variables: {
+                    id: this.filter.id || null,
+                    name: this.filter.name || null,
+                }
+            }).then((result) => {
+                this.data = result.data.profile
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+                this.data = null
+            })
         }
     }
 }

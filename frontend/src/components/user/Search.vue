@@ -83,8 +83,8 @@ export default {
                 `,
                 fetchPolicy: 'network-only',
                 variables: {
-                    id: this.filter.id ? parseInt(this.filter.id) : null,
-                    email: this.filter.email ? this.filter.email : null,
+                    id: this.filter.id || null,
+                    email: this.filter.email || null,
                 }
             }).then((result) => {
                 this.data = result.data.user

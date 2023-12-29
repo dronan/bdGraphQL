@@ -13,7 +13,7 @@
                 </div>
             </v-flex>
             <v-flex>
-                <v-data-table :headers="headers" :items="profile" 
+                <v-data-table :headers="headers" :items="profiles" 
                     hide-actions class="elevation-1">
                     <template slot="items" slot-scope="props">
                         <td>{{ props.item.id }}</td>
@@ -28,13 +28,14 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
     data() {
         return {
             errors: null,
-            profile: [],
+            profiles: [],
             headers: [
                 { text: 'ID', value: 'id' },
                 { text: 'Name', value: 'name' },
@@ -44,7 +45,24 @@ export default {
     },
     methods: {
         getProfiles() {
-            // implement
+            this.$api.query({
+                query: gql`
+                    query {
+                        profiles {
+                            id
+                            name
+                            label
+                        }
+                    }
+                `,
+                fetchPolicy: 'network-only'
+            }).then(( result ) => {
+                this.errors = null
+                this.profiles = result.data.profiles
+            }).catch(err => {
+                this.profiles = []
+                this.errors = err.graphQLErrors
+            })
         }
     }
 }
