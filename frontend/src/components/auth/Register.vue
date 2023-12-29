@@ -13,7 +13,7 @@
                         <v-text-field label="E-mail"
                             v-model="user.email" />
                         <v-text-field label="Password"
-                            v-model="user.Password" type="password" />
+                            v-model="user.password" type="password" />
                         <v-btn color="primary" class="ml-0 mt-3"
                             @click="register">
                             register
@@ -31,8 +31,8 @@
                             v-model="data.name" />
                         <v-text-field label="E-mail" readonly
                             v-model="data.email" />
-                        <v-text-field label="profile" readonly
-                            :value="profile" />
+                        <v-text-field label="Profile" readonly
+                            :value="profiles" />
                     </template>
                 </v-layout>
             </v-flex>
@@ -42,6 +42,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -53,14 +54,46 @@ export default {
         }
     },
     computed: {
-        profile() {
-            return this.data && this.data.profile &&
-                this.data.profile.map(p => p.name).join(',')
+        profiles() {
+            return this.data && this.data.profiles &&
+                this.data.profiles.map(p => p.name).join(',')
         }
     },
     methods: {
         register() {
-            // implementar
+            this.$api.mutate({
+                mutation: gql`
+                    mutation(
+                        $name: String!
+                        $email: String!
+                        $password: String!
+                    ) {
+                        registerUser(data: {
+                            name: $name
+                            email: $email
+                            password: $password
+                        }) {
+                            id
+                            name
+                            email
+                            profiles {
+                                id
+                                name
+                            }
+                        }
+                    }
+                `,
+                variables: { 
+                    name: this.user.name,
+                    email: this.user.email,
+                    password: this.user.password,
+                }
+            }).then(({ data }) => {
+                this.data = data.registerUser
+                this.errors = null
+            }).catch(err => {
+                this.errors = err.graphQLErrors
+            })
         }
     }
 }
