@@ -81,7 +81,7 @@ const mutations = {
             const user = await getUser(_, { filter })
             if(user) {
                 const { id } = user
-                if(data.profiles) {
+                if(ctx.admin && data.profiles) {
                     // delete all profiles from the user to add the new ones
                     await db('user_profiles')
                         .where({ user_id: id }).delete()
