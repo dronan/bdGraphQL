@@ -79,12 +79,12 @@ export default {
                         }
                     }
                 `,
+                fetchPolicy: 'network-only',
                 variables: {
                     email: this.user.email,
                     password: this.user.password,
                 }
             }).then(({ data }) => {
-                console.log(data)
                 this.data = data.login
                 this.errors = null
                 this.setUser(this.data)

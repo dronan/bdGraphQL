@@ -16,14 +16,11 @@ export default {
             const e = this.errors
 
             const itens = []
-            
             if(e.graphQLErrors) {
                 itens.push(...e.graphQLErrors)
+            } else {
+                itens.push(...e)
             }
-            
-            // if(e.networkError) {
-            //     itens.push(e.networkError)
-            // }
 
             if(itens.length === 0) {
                 itens.push({

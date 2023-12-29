@@ -19,7 +19,7 @@
                         <td>{{ props.item.id }}</td>
                         <td>{{ props.item.name }}</td>
                         <td>{{ props.item.email }}</td>
-                        <td>{{ props.item.profile
+                        <td>{{ props.item.profiles
                                 .map(p => p.name)
                                 .join(', ') }}</td>
                     </template>
@@ -31,6 +31,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -48,7 +49,28 @@ export default {
     },
     methods: {
         getUsers() {
-            // 
+            this.$api.query({
+                query: gql`
+                    query {
+                        users {
+                            id
+                            name
+                            email
+                            profiles {
+                                id
+                                name
+                            }
+                        }
+                    }
+                `,
+                fetchPolicy: 'network-only'
+            }).then(( result ) => {
+                this.errors = null
+                this.users = result.data.users
+            }).catch(err => {
+                this.users = []
+                this.errors = err.graphQLErrors
+            })
         }
     }
 }
