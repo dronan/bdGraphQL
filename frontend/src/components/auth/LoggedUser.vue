@@ -12,7 +12,7 @@
 
                 <span class="ml-3 headline"><strong>Profile: </strong></span>
                 <span class="headline red--text text--darken-2">
-                    {{ profile }}</span>
+                    {{ profiles }}</span>
             </v-flex>
             <v-flex>
             </v-flex>
@@ -32,9 +32,9 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     computed: {
         ...mapGetters(['user']),
-        profile() {
-            if(!this.user && !this.user.profile) return null
-            return this.user.profile.map(p => p.name).join(', ')
+        profiles() {
+            if(!this.user && !this.user.profiles) return null
+            return this.user.profiles.map(p => p.label).join(', ')
         }
     },
     methods: mapActions(['setUser'])

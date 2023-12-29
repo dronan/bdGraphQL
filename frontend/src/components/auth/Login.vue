@@ -41,7 +41,7 @@
 <script>
 import { mapActions } from 'vuex'
 import Error from '../common/Error'
-
+import gql from 'graphql-tag'
 export default {
     components: { Error },
     data() {
@@ -60,7 +60,38 @@ export default {
     methods: {
         ...mapActions(['setUser']),
         login() {
-            // implement
+            this.$api.query({
+                query: gql`
+                    query($email: String!, $password: String!){
+                        login(data: {
+                                email: $email, 
+                                password: $password
+                            }){
+                            id
+                            name
+                            email
+                            token
+                            profiles {
+                                id
+                                name
+                                label
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    email: this.user.email,
+                    password: this.user.password,
+                }
+            }).then(({ data }) => {
+                console.log(data)
+                this.data = data.login
+                this.errors = null
+                this.setUser(this.data)
+            }).catch(err => {
+                this.data = null
+                this.errors = err.graphQLErrors.map(e => e.message)
+            })
         }
     }
 }
