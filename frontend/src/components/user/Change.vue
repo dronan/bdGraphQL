@@ -21,7 +21,7 @@
                         v-model="user.email" />
                     <v-text-field label="Password"
                         v-model="user.Password" type="password" />
-                    <v-select label="profile"
+                    <v-select label="Profile"
                         v-model="user.profile"
                         :items="profile"
                         item-value="id"

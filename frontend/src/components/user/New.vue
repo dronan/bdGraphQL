@@ -3,7 +3,7 @@
         <v-layout>
             <v-flex>
                 <v-layout column class="ma-3">
-                    <h1 class="headline">Novo Usuário</h1>
+                    <h1 class="headline">New User</h1>
                     <v-divider class="mb-3" />
                         <div v-if="errors">
                             <Error :errors="errors" />
@@ -14,7 +14,7 @@
                             v-model="user.email" />
                         <v-text-field label="Password"
                             v-model="user.Password" type="password" />
-                        <v-select label="profile"
+                        <v-select label="Profile"
                             v-model="user.profile"
                             :items="profile"
                             item-value="id"
