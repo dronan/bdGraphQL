@@ -20,7 +20,7 @@
                     <v-text-field label="E-mail"
                         v-model="user.email" />
                     <v-text-field label="Password"
-                        v-model="user.Password" type="password" />
+                        v-model="user.password" type="password" />
                     <v-select label="Profile"
                         v-model="user.profiles"
                         :items="profiles"
@@ -80,7 +80,7 @@ export default {
         },
         selectedProfiles() {
             if(this.user.profiles) {
-                return this.user.profile.map(id => ({ id }))
+                return this.user.profiles.map(id => ({ id }))
             } else {
                 return null
             }
@@ -88,7 +88,50 @@ export default {
     },
     methods: {
         changeUser() {
-            // Implement
+            this.$api.mutate({
+                mutation: gql`
+                    mutation(
+                        $idFilter: Int
+                        $emailFilter: String
+                        $name: String!
+                        $email: String!
+                        $password: String!
+                        $profiles: [ProfileFilter]
+                    ) {
+                        updateUser(
+                            filter: {
+                                id: $idFilter
+                                email: $emailFilter
+                            }
+                            data: {
+                                name: $name
+                                email: $email
+                                password: $password
+                                profiles: $profiles
+                            }) {
+                            id
+                            name
+                            email
+                            profiles {
+                                label
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    idFilter: this.filter.id,
+                    emailFilter: this.filter.email,
+                    name: this.user.name,
+                    email: this.user.email,
+                    password: this.user.password,
+                    profiles: this.selectedProfiles
+                }
+            }).then(result => {
+                this.data = result.data.updateUser
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+            })
         },
         getProfiles() {
             this.$api.query({
