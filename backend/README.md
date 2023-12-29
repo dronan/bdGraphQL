@@ -5,7 +5,9 @@
 
 ## Installation
 
-```
+- Install the dependencies
+
+```bash
 npm install
 ```
 
@@ -15,9 +17,10 @@ npm install
 npx knex migrate:latest
 ```
 
-## Running
+## Running backend
 
-```
+```bash
+cd backend
 npm start
 ```
 
