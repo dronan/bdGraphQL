@@ -15,8 +15,8 @@
                         <v-text-field label="Password"
                             v-model="user.Password" type="password" />
                         <v-select label="Profile"
-                            v-model="user.profile"
-                            :items="profile"
+                            v-model="user.profiles"
+                            :items="profiles"
                             item-value="id"
                             item-text="label"
                             attach multiple
@@ -53,25 +53,26 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
     data() {
         return {
             user: {},
-            profile: [],
+            profiles: [],
             data: null,
             errors: null
         }
     },
     computed: {
         labelsProfiles() {
-            return this.data && this.data.profile &&
-                this.data.profile.map(p => p.label).join(', ')
+            return this.data && this.data.profiles &&
+                this.data.profiles.map(p => p.label).join(', ')
         },
         selectedProfiles() {
-            if(this.user.profile) {
-                return this.user.profile.map(id => ({ id }))
+            if(this.user.profiles) {
+                return this.user.profiles.map(id => ({ id }))
             } else {
                 return null
             }
@@ -82,7 +83,14 @@ export default {
             // implementar
         },
         getProfiles() {
-            // implementar
+            this.$api.query({
+                query: gql`{ profiles { id label } }`
+            }).then(result => {
+                this.profiles = result.data.profiles
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+            })
         }
     }
 }

@@ -2,7 +2,7 @@ const jwt = require('jwt-simple');
 
 module.exports = async ({req})  => {
     // simulate logged user to test
-    // await require('./simulateLoggedUser')(req);
+    await require('./simulateLoggedUser')(req);
     const auth = req.headers.authorization;
 
     // get the code from the token after 7 characters (Bearer )

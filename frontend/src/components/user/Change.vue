@@ -22,8 +22,8 @@
                     <v-text-field label="Password"
                         v-model="user.Password" type="password" />
                     <v-select label="Profile"
-                        v-model="user.profile"
-                        :items="profile"
+                        v-model="user.profiles"
+                        :items="profiles"
                         item-value="id"
                         item-text="label"
                         attach multiple
@@ -49,7 +49,7 @@
                             v-model="data.name" />
                         <v-text-field label="E-mail" readonly
                             v-model="data.email" />
-                        <v-text-field label="profile" readonly
+                        <v-text-field label="Profiles" readonly
                             :value="labelProfiles" />
                     </template>
                 </v-layout>
@@ -60,6 +60,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -67,18 +68,18 @@ export default {
         return {
             filter: {},
             user: {},
-            profile: [],
+            profiles: [],
             data: null,
             errors: null
         }
     },
     computed: {
         labelProfiles() {
-            return this.data && this.data.profile &&
-                this.data.profile.map(p => p.label).join(', ')
+            return this.data && this.data.profiles &&
+                this.data.profiles.map(p => p.label).join(', ')
         },
         selectedProfiles() {
-            if(this.user.profile) {
+            if(this.user.profiles) {
                 return this.user.profile.map(id => ({ id }))
             } else {
                 return null
@@ -90,7 +91,14 @@ export default {
             // Implement
         },
         getProfiles() {
-            // implement
+            this.$api.query({
+                query: gql`{ profiles { id label } }`
+            }).then(result => {
+                this.profiles = result.data.profiles
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+            })
         }
     }
 }
