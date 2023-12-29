@@ -29,7 +29,7 @@
                             v-model="data.name" />
                         <v-text-field label="E-mail" readonly
                             v-model="data.email" />
-                        <v-text-field label="profile" readonly
+                        <v-text-field label="Profile" readonly
                             :value="profileLabels" />
                     </template>
                 </v-layout>
@@ -40,6 +40,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -53,13 +54,45 @@ export default {
     },
     computed: {
         profileLabels() {
-            return this.data && this.data.profile &&
-                this.data.profile.map(p => p.label).join(', ')
+            return this.data && this.data.profiles &&
+                this.data.profiles.map(p => p.label).join(', ')
         }
     },
     methods: {
         search() {
-            // implement
+            this.$api.query({
+                query: gql`
+                    query(
+                        $id: Int, 
+                        $email: String) {
+                        user( 
+                            filter: {
+                                    id: $id, 
+                                    email: $email 
+                                    }
+                            ){
+                                id
+                                name
+                                email
+                                profiles {
+                                    id
+                                    label
+                                }
+                            }
+                    }
+                `,
+                fetchPolicy: 'network-only',
+                variables: {
+                    id: this.filter.id ? parseInt(this.filter.id) : null,
+                    email: this.filter.email ? this.filter.email : null,
+                }
+            }).then((result) => {
+                this.data = result.data.user
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+                this.data = null
+            })
         }
     }
 }

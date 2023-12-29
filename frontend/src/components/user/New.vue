@@ -13,7 +13,7 @@
                         <v-text-field label="E-mail"
                             v-model="user.email" />
                         <v-text-field label="Password"
-                            v-model="user.Password" type="password" />
+                            v-model="user.password" type="password" />
                         <v-select label="Profile"
                             v-model="user.profiles"
                             :items="profiles"
@@ -80,7 +80,42 @@ export default {
     },
     methods: {
         newUser() {
-            // implementar
+            this.$api.mutate({
+                mutation: gql`
+                    mutation(
+                        $name: String!
+                        $email: String!
+                        $password: String!
+                        $profiles: [ProfileFilter]
+                    ) {
+                        newUser(data: {
+                            name: $name
+                            email: $email
+                            password: $password
+                            profiles: $profiles
+                        }) {
+                            id
+                            name
+                            email
+                            profiles {
+                                id
+                                label
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    name: this.user.name,
+                    email: this.user.email,
+                    password: this.user.password,
+                    profiles: this.selectedProfiles
+                }
+            }).then(result => {
+                this.data = result.data.newUser
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+            })
         },
         getProfiles() {
             this.$api.query({
