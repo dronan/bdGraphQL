@@ -17,7 +17,6 @@ module.exports = {
         }
 
         const authSecret = process.env.APP_AUTH_SECRET;
-        console.log(authSecret);
 
         return {
             ...userInfo,

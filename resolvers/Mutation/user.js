@@ -4,7 +4,9 @@ const { profile: getProfile } = require('../Query/profile')
 const { user: getUser } = require('../Query/user')
 
 const mutations = {
-    async newUser(_, { data }) {
+    async newUser(_, { data }, ctx) {
+        ctx && ctx.validateAdmin()
+
         try {
             const idProfiles = []
 
@@ -55,7 +57,9 @@ const mutations = {
             throw new Error(e)
         }
     },
-    async deleteUser(_, { filter }) {
+    async deleteUser(_, { filter }, ctx) {
+        ctx && ctx.validateAdmin()
+
         try {
             const user = await getUser(_, { filter })
             if(user) {
@@ -71,7 +75,8 @@ const mutations = {
             throw new Error(e)
         }
     },
-    async updateUser(_, { filter, data }) {
+    async updateUser(_, { filter, data }, ctx) {
+        ctx && ctx.validateUserFilter(filter)
         try {
             const user = await getUser(_, { filter })
             if(user) {
