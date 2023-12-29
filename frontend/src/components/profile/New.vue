@@ -38,6 +38,7 @@
 
 <script>
 import Error from '../common/Error'
+import gql from 'graphql-tag'
 
 export default {
     components: { Error },
@@ -50,7 +51,33 @@ export default {
     },
     methods: {
         newProfile() {
-            // implement
+            this.$api.mutate({
+                mutation: gql`
+                    mutation(
+                        $name: String!
+                        $label: String!
+                    ) {
+                        newProfile(data: {
+                            name: $name
+                            label: $label
+                        }) {
+                            id
+                            name
+                            label
+                        }
+                    }
+                `,
+                variables: {
+                    name: this.profile.name,
+                    label: this.profile.label,
+                }
+            }).then(result => {
+                this.data = result.data.newProfile
+                this.profile = {}
+                this.errors = null
+            }).catch(e => {
+                this.errors = e
+            })
         }
     }
 }
